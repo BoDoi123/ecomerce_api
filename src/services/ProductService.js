@@ -118,10 +118,50 @@ const deleteProduct = (id) => {
 	});
 };
 
-const getAllProducts = (limit = 8, page = 0) => {
+const getAllProducts = (limit, page, sort, filter) => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			const totalProducts = await Product.countDocuments();
+
+			// Filter Product
+			if (filter) {
+				const label = filter[0];
+				const allObjectsFilter = await Product.find({
+					[label]: { $regex: filter[1] },
+				})
+					.limit(limit)
+					.skip(page * limit);
+
+				resolve({
+					status: "OK",
+					message: "Success",
+					data: allObjectsFilter,
+					total: totalProducts,
+					currentPage: page + 1,
+					totalPages: Math.ceil(totalProducts / limit),
+				});
+			}
+
+			// Sort Product
+			if (sort) {
+				const objectSort = {};
+				objectSort[sort[1]] = sort[0];
+
+				const allProductsSort = await Product.find()
+					.limit(limit)
+					.skip(page * limit)
+					.sort(objectSort);
+
+				resolve({
+					status: "OK",
+					message: "Success",
+					data: allProductsSort,
+					total: totalProducts,
+					currentPage: page + 1,
+					totalPages: Math.ceil(totalProducts / limit),
+				});
+			}
+
 			const allProduct = await Product.find()
 				.limit(limit)
 				.skip(page * limit);
