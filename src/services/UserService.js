@@ -4,7 +4,7 @@ const { generalAccessToken, generalRefreshToken } = require("./JwtService");
 
 const createUser = (newUser) => {
 	return new Promise(async (resolve, reject) => {
-		const { name, email, password, confirmPassword, phone } = newUser;
+		const { name, email, password, phone } = newUser;
 
 		try {
 			const checkUser = await User.findOne({
@@ -13,7 +13,7 @@ const createUser = (newUser) => {
 
 			if (checkUser !== null) {
 				resolve({
-					status: "OK",
+					status: "ERR",
 					message: "The email is already",
 				});
 			}
@@ -42,7 +42,7 @@ const createUser = (newUser) => {
 
 const loginUser = (userLogin) => {
 	return new Promise(async (resolve, reject) => {
-		const { name, email, password, confirmPassword, phone } = userLogin;
+		const { email, password } = userLogin;
 
 		try {
 			const checkUser = await User.findOne({
@@ -51,7 +51,7 @@ const loginUser = (userLogin) => {
 
 			if (checkUser === null) {
 				resolve({
-					status: "OK",
+					status: "ERR",
 					message: "The user is not defined",
 				});
 			}
@@ -63,7 +63,7 @@ const loginUser = (userLogin) => {
 
 			if (!comparePassword) {
 				resolve({
-					status: "OK",
+					status: "ERR",
 					message: "The password or user is incorrect",
 				});
 			}
@@ -128,7 +128,7 @@ const deleteUser = (id) => {
 
 			if (checkUser === null) {
 				resolve({
-					status: "OK",
+					status: "ERR",
 					message: "The user is not defined",
 				});
 			}
@@ -170,7 +170,7 @@ const getDetailsUser = (id) => {
 
 			if (user === null) {
 				resolve({
-					status: "OK",
+					status: "ERR",
 					message: "The user is not defined",
 				});
 			}
