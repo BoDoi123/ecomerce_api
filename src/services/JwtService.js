@@ -20,7 +20,7 @@ const generalRefreshToken = async (payload) => {
 			...payload,
 		},
 		process.env.REFRESH_TOKEN,
-		{ expiresIn: "1s" }
+		{ expiresIn: "3600s" }
 	);
 
 	return refresh_token;
