@@ -89,7 +89,6 @@ const updateUser = async (req, res) => {
 		});
 	}
 };
-
 const deleteUser = async (req, res) => {
 	try {
 		const userId = req.params.id;
@@ -101,6 +100,25 @@ const deleteUser = async (req, res) => {
 		}
 
 		const response = await UserService.deleteUser(userId);
+		return res.status(200).json(response);
+	} catch (e) {
+		return res.status(404).json({
+			message: e,
+		});
+	}
+};
+
+const deleteManyUser = async (req, res) => {
+	try {
+		const ids = req.body;
+		if (!ids) {
+			return res.status(200).json({
+				status: "ERR",
+				message: "The ids is required",
+			});
+		}
+
+		const response = await UserService.deleteManyUser(ids);
 		return res.status(200).json(response);
 	} catch (e) {
 		return res.status(404).json({
@@ -178,6 +196,7 @@ module.exports = {
 	loginUser,
 	updateUser,
 	deleteUser,
+	deleteManyUser,
 	getAllUser,
 	getDetailsUser,
 	refreshToken,
