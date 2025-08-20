@@ -32,7 +32,7 @@ const createProduct = (newProduct) => {
 				countInStock,
 				rating,
 				description,
-				discount,
+				discount: Number(discount),
 			});
 			if (newProduct) {
 				resolve({
