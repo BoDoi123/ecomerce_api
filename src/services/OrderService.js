@@ -12,7 +12,7 @@ const createOrder = (newOrder) => {
 			address,
 			city,
 			phone,
-            user
+			user,
 		} = newOrder;
 
 		try {
@@ -30,11 +30,12 @@ const createOrder = (newOrder) => {
 				totalPrice,
 				user: user,
 			});
-			if (newProduct) {
+
+			if (createOrder) {
 				resolve({
 					status: "OK",
 					message: "SUCCESS",
-					data: newProduct,
+					data: createOrder,
 				});
 			}
 		} catch (e) {
