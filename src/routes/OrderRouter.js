@@ -9,5 +9,10 @@ router.get(
 
 	OrderController.getDetailsOrder
 );
+router.delete(
+	"/delete-by-details",
+
+	OrderController.deleteOrderByDetails
+);
 
 module.exports = router;

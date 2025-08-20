@@ -111,7 +111,53 @@ const getDetailsOrder = (id) => {
 	});
 };
 
+const deleteOrderByUserAndDetails = (userId, orderDetails) => {
+	return new Promise(async (resolve, reject) => {
+		try {
+			// Tìm order trước khi xóa
+			const order = await Order.findById(orderDetails._id);
+
+			if (!order) {
+				resolve({
+					status: "ERR",
+					message: "Không tìm thấy đơn hàng",
+				});
+				return;
+			}
+
+			// Cập nhật lại số lượng trong kho cho từng sản phẩm
+			const updatePromises = order.orderItems.map(async (item) => {
+				await Product.findOneAndUpdate(
+					{ _id: item.product },
+					{
+						$inc: {
+							countInStock: +item.amount, // Hoàn lại số lượng vào kho
+							sold: -item.amount, // Giảm số lượng đã bán
+						},
+					}
+				);
+			});
+
+			// Đợi tất cả các thao tác cập nhật hoàn thành
+			await Promise.all(updatePromises);
+
+			// Sau khi cập nhật xong, xóa đơn hàng
+			const deletedOrder = await Order.findOneAndDelete({
+				_id: orderDetails._id,
+			});
+
+			resolve({
+				status: "OK",
+				message: "Xóa đơn hàng thành công",
+				data: deletedOrder,
+			});
+		} catch (e) {
+			reject(e);
+		}
+	});
+};
 module.exports = {
 	createOrder,
 	getDetailsOrder,
+	deleteOrderByUserAndDetails,
 };

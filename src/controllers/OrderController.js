@@ -56,7 +56,32 @@ const getDetailsOrder = async (req, res) => {
 	}
 };
 
+const deleteOrderByDetails = async (req, res) => {
+	try {
+		const orderDetails = req.body;
+		const { user: userId } = orderDetails;
+
+		if (!userId || !orderDetails) {
+			return res.status(200).json({
+				status: "ERR",
+				message: "Thiếu thông tin đơn hàng",
+			});
+		}
+
+		const response = await OrderService.deleteOrderByUserAndDetails(
+			userId,
+			orderDetails
+		);
+		return res.status(200).json(response);
+	} catch (e) {
+		return res.status(404).json({
+			message: e,
+		});
+	}
+};
+
 module.exports = {
 	createOrder,
 	getDetailsOrder,
+	deleteOrderByDetails,
 };
